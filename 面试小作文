@@ -348,4 +348,16 @@ hive八位日期字符串转化为DATE类型：
 
 最大单表数据量：
 
+建立宽表的原则：
 
+怎么对接
+
+业务需求：
+
+连续登录问题：select id, count(1) as login_duration from 
+             (select id, date, rn, date_sub(date, rn) as sub_date from 
+             (select id, date, row_number() over(partition by id order by date) as rn from <table> group by id, date) a) b 
+             group by id, sub_date 
+             having login_duration >= 3;
+
+数仓中表的命名规范，说一张表明（英文）：
