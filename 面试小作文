@@ -22,9 +22,20 @@
 
 
 hive拉链表：https://blog.csdn.net/weixin_46389691/article/details/127973319
-先对历史表跟增量表进行左连接，如果增量表没有或已经是历史数据的，就做保留，
-增量表有且历史表是有效记录的，就对历史表作更新，将有效时间改成系统时间的上一天，
+先对历史表跟增量表进行左连接，在历史表中作if判断，如果增量表没有或已经是历史数据的，就做保留，
+增量表有且历史表是有效记录的，就对历史表作更新，将历史表原数据的有效时间改成系统时间的上一天，
 这个过程就完成对历史拉链表的更新，最后再union all增量表就可以生成新的历史拉链表了
+
+select id, name, gender, addr, start_time, end_time from ods.update_zip -- 增量表
+union all -- 合并历史表
+select a.id, a.name, a.gender, a.addr, a.start_time, if(b.id is null or a.end_time < '9999-12-31',a.end_time,date_sub(b.start_time,1)) end_time
+from
+  dwd.dwd_zip a -- 历史拉链表
+left join
+  ods.update_zip b -- 增量数据表
+on
+  a.id = b.id;
+
 
 输出文档：mapping文档，模型文档，概要文档，详细文档，测试文档（sit，uat），上线文档
 
@@ -321,7 +332,9 @@ distinct 与group by区别和效率：distinct需要对比表中每一行，而g
 
 分区索引和全局索引的区别，分别在什么情况使用
 
-子查询与join区别：
+子查询与join区别：子查询是select语句嵌套另一个select语句
+                 join是两个或多个表通过关联字段进行关联
+                 join比子查询更高效，因为join不需要多次数据库
 
 指标拆解是什么概念：
 
