@@ -473,3 +473,42 @@ hive比较两数值大小：select greatest(-1, 0, 5, 8, null) --null
 8.进行性能测试和优化
 
 为什么要做数据域的划分：帮助我们管理数据的模型，支撑数据模型的建设，一个合理的数据域划分可以提升数据查询的效率，减少数据冗余，避免重复开发的问题
+
+hive行转列（多行转一行）：concat_ws(',', collect_list(列名))
+例子：A表
+name      course
+cht       english
+cht       maths
+cht       linux
+cht       shell
+cht       python
+
+行转列语句：select name, concat_ws(',', collect_list(course)) as course_list from A group by name;
+其中collect_list不作去重，collect_set会去重，都是hive里的聚合函数，需要结合group by使用
+
+hive列转行（一行转多行）：lateral view explode(split(列名, 分隔符)) 临时表名 as 新列名
+1.B表原数据形式
+movie   category
+教父	黑帮,警匪,心理,剧情
+侏罗纪公园	动作,科幻,剧情,灾难
+战狼	战争,动作,灾难
+
+2.需求形式：
+movie   category_name
+教父	黑帮
+教父	警匪
+教父	心理
+教父	剧情
+侏罗纪公园	动作
+侏罗纪公园	科幻
+侏罗纪公园	剧情
+侏罗纪公园	灾难
+战狼	战争
+战狼	动作
+战狼	灾难
+
+列转行语句：select movie,category_name from B lateral view explode(split(category, ',')) B_tmp as category_name;
+说明：lateral view 侧视图将 explode 函数里的炸裂开的数据与原来同一行的 movie 字段数据分别对应上，生成 B_tmp 这个只有一个字段的虚拟表，再给这一列取新的列名 category_name（需要与 select 里的列名对应上）
+      explode 函数值接收map，array类型的数据，split 切割函数能把输入的数据转化为数组，用法为 split(列名, 分隔符)
+
+
