@@ -514,3 +514,44 @@ movie   category_name
 需求分析调研流程：从jira上接到业务给我们team的需求，然后整个团队跟业务去开会讨论这些需要的可行性，比如上游的业务系统没有这些数据，那就没法做；、
                  然后评估下这需求开发大概所需要的时间，需要用到的表，字段，是否能复用已有的表，如果能，那需要从数仓的哪一层开始进行开发等，然后跟业务确认数据的粒度，指标计算的公式，指标开发的口径，比如说提前结清率这个指标到底是用户口径还是金额口径，这些都需要跟业务去逐一确认
                  最后是双方确认一个排期时间，因为基本上任务不是一个做完才去接另外一个，都是不定期给的，需要排期来完成
+
+事务型事实表：每一行记录一次业务事件，像订单，交易等，每一列都记录相应的度量值，如金额，数量等，适用于分析一个业务事件的细节；
+周期型快照事实表：相比于事务型事实表，周期性快照事实表记录的是某段时间内的累计度量，而不是某次业务事件，如每月末，每周末的销售总额等，适用于分析业务的趋势和周期变化；
+累计型快照事实表：累计型快照事实表用于记录某一个业务过程，通常由多个时间点组成，每个时间点分别记录相对应的业务阶段，所以累计型快照事实表包含一个时间键和状态指标键，累计型快照事实表常会用在分析业务流程的效率和进展方面；
+
+hive优化：
+1.小数据量时使用本地模式：
+  (1)set hive.exec.mode.local.auto=true; //开启本地mr
+     用户可以通过设置hive.exec.mode.local.auto的值为true，来让Hive在适当的时候自动启动这个优化。
+  (2)set hive.exec.mode.local.auto.inputbytes.max=50000000;
+     设置local mr的最大输入数据量，当输入数据量小于这个值时采用local mr的方式，默认为134217728，即128M
+  (3)set hive.exec.mode.local.auto.input.files.max=10; 
+     设置local mr的最大输入文件个数，当输入文件个数小于这个值时采用local mr的方式，默认为4
+2.减少参与查询的数据量，先筛选再计算或连接；
+3.使用mapjoin，如果不指定MapJoin或者不符合MapJoin的条件，那么Hive解析器会将Join操作转换成Common Join，即：在Reduce阶段完成join。容易发生数据倾斜
+  (1)设置自动选择Mapjoin
+     set hive.auto.convert.join = true; 默认为true
+  (2)大表小表的阀值设置（默认25M一下认为是小表）；
+     set hive.mapjoin.smalltable.filesize=25000000;
+4.Group By优化，默认情况下，Map阶段同一Key数据分发给一个reduce，当一个key数据过大时就倾斜了。并不是所有的聚合操作都需要在Reduce端完成，很多聚合操作都可以先在Map端进行部分聚合，最后在Reduce端得出最终结果。
+  （1）开启Map端聚合参数设置,默认为True
+       hive.map.aggr = true
+  （2）在Map端进行聚合操作的条目数目
+       hive.groupby.mapaggr.checkinterval = 100000
+  （3）有数据倾斜的时候进行负载均衡（默认是false）
+       hive.groupby.skewindata = true
+5.Count(Distinct) 去重优化方案(数据倾斜)
+  数据量大的情况下，由于COUNT DISTINCT操作需要用一个Reduce Task来完成，这一个Reduce需要处理的数据量太大，就会导致整个Job很难完成，一般COUNT DISTINCT使用先GROUP BY再COUNT的方式替换，虽然会多用一个Job来完成，但在数据量大的情况下，这个绝对是值得的。
+  select count(distinct id) from bigtable;(优化前)
+  select count(id) from (select id from bigtable group by id) a;(优化后)
+6.避免迪卡尔基
+  尽量避免笛卡尔积，join的时候不加on条件，或者无效的on条件，Hive只能使用1个reducer来完成笛卡尔积。
+7.开启并行执行
+  set hive.exec.parallel=true; //打开任务并行执行
+  set hive.exec.parallel.thread.number=16; //同一个sql允许最大并行度，默认为8。
+8.执行计划分析
+  通过explain查看sql运行的步骤，逻辑，数据类型，运行顺序等
+9.修改表格存储格式
+  大表使用ORC 或 Parquet
+10.分区，分桶
+11.根据表结构合理设置map跟reduce数量
