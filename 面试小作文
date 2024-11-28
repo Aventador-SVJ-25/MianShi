@@ -44,7 +44,7 @@ After completing the hive sql code,
 I will conduct a self-test to check the uniqueness, integrity, legality, accuracy, and timeliness of the data to ensure the quality of the data to a certain extent. 
 If there is no problem, encapsulate the hive sql code into shell scripts,
 and hand it over to the test engineer to do SIT test and UAT test. 
-After the test passes, I will write the online document and hand it over to the DBA to arrange those new tables online;
+After the test passes, I will draft the online document and hand it over to the DBA to arrange those new tables online;
 
 对这些贴源层新增数据作清洗转换，具体要清洗内容有：
 去异常：比如贷款申请表里有异常申请的，应该去掉，
