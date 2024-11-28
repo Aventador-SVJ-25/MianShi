@@ -3,17 +3,48 @@
 对数据进行清洗、转换，编写日常工作所需的shell脚本，项目文档的编写。
 在做好本职工作之上，还参与协助数仓模型的设计，报表的制作等，能够与业务员、架构师以及其他技术员进行有效的沟通和协作，保证项目工作能够高效展开实施。
 
-最近一份工作是外包到泉州银行的贷款监控数仓项目。
-该项目主要负责的内容有
+Hello, interviewer. My name is Chen Hengtao. I graduated from Guangzhou Maritime Institute. 
+After graduation, I worked as a Linux operation and maintenance engineer for about 2 years and worked as an ETL engineer for about 4 years.
+During my time as an ETL engineer, I worked on 3 data warehouse projects. 
+My responsibilities in the most recent data warehouse projects included project-related business research, 
+design of the overall ETL process, scheduling and monitoring,
+cleaning and conversion of data, create shell scripts to handle daily work, and write some documents which project needs.
+In addition to doing my job well, I also assisted in the design of data warehouse models and the production of reports. 
+I was able to communicate and collaborate with sales staff, architects and other technicians to ensure that project work can be implemented efficiently.
+
+最近一份工作是外包到泉州银行的零售贷款数仓项目。
+我在该项目主要负责的内容有
 1.客户在jira中把需求发送到我们的团队，然后我们会跟相关的业务员开需求澄清会议来确认取数逻辑，指标的粒度和口径
 并且还会讨论如何实现需求，进行可行性分析，要用到哪些系统的业务表和字段，能否复用在数仓里已存在的表，并且设计好模型表等等；
 2.我们的数仓是基于星型模型来设计的，每个开发人员都按照自己分配到的二级主题域来对DW层和集市层做数据的流转
 3.项目里我主要负责的是风控域这个主题，从dwd层我主要做的事是根据指标体系认证书里面的口径，量化原子指标，确定清洗规则，
-去重，去空，去异常，统一数据类型，统一数据格式等等，然后把清洗好的数据加载到各个事实表里头，
+对ODS层数据进行去重，去空，去异常，统一数据类型，统一数据格式等等，然后把清洗好的数据加载到各个事实表里头，
 之后再把贷款风控域主题相关的事实表和维表聚合成大宽表（零售信贷风控域基表），为集市层提供统一的基础数据和指标，
 最后再根据需求用宽表层的基础数据作进一步的聚合，进而形成最终的指标并输出到各个集市表里，比如授信监控集市，贷款逾期集市，贷款申请集市等等；
 4.完成sql代码后我会进行个自测，来对数据的唯一性，完整性，合法性，精确性，时效性作检查，一定程度上保证数据的质量，没问题后就把sql代码封装到shell脚本里，
 并交给测试人员去做冒烟测试跟联调测试，测试通过后再去写上线文档并交给DBA去安排上线；
+
+My most recent project was a retail loan data warehouse project outsourced to Bank of Quanzhou.
+My main responsibilities in this project was
+when the customer sends the requirements to our team in jira, 
+we hold a requirements clarification meeting with the relevant sales staff to confirm the data acquisition logic, 
+the granularity and caliber of the indicators
+We will also discuss how to implement the requirements, conduct feasibility analysis, which business system tables and fields to use, 
+whether the existing tables in the data warehouse can be reused etc.
+Our data warehouse is designed based on the star model, 
+and each data developer loads data into DW layer and DM layer according to the secondary subject domain which assigned to him
+In this project, I am mainly responsible for the theme of risk control domain. 
+From the DWD layer, I should determine cleaning rules according to the caliber in the Indicator System Management Manual,
+and Remove duplicates, null values, and outliers from ODS layer data, and also unify data types and data formats, etc.
+Then load the cleaned data into each fact table on DWD layer,
+then aggregate the fact tables and dimension tables which related to the risk control domain theme into a wide table 
+to provide unified basic data and indicators for the DM layer,
+finally, further aggregate the basic data from the dws layer according to the needs, and then output the final indicators to each DM table, 
+After completing the hive sql code, 
+I will conduct a self-test to check the uniqueness, integrity, legality, accuracy, and timeliness of the data to ensure the quality of the data to a certain extent. 
+If there is no problem, encapsulate the hive sql code into shell scripts,
+and hand it over to the test engineer to do SIT test and UAT test. 
+After the test passes, I will write the online document and hand it over to the DBA to arrange those new tables online;
 
 对这些贴源层新增数据作清洗转换，具体要清洗内容有：
 去异常：比如贷款申请表里有异常申请的，应该去掉，
@@ -365,9 +396,11 @@ Vintage 就是帐龄，Flow Rate 滚动率，CPI 账户逾期率，API 金额逾
                        时间转时间戳 unix_timestamp: select unix_timestamp('20240926', 'yyyyMMdd');
 
 distinct 与group by区别和效率：distinct需要对比表中每一行，而group by 是分组处理
-(not) in 和 （not）exists的区别和效率: exists: 查询结果集，有记录则成立，否则不成立，可以用于不等式
-                                     in：只能查询值，查询值在指定列表中的行
-                                     数据量一致时，exists的性能好
+
+(not) in 和 （not）exists的区别和效率: exists: 先查询外表，对外表做loop查询，再对内表查询
+                                     in：把外表跟内表进行hash连接，先查询内表返回结果集，再去跟外表去作比较
+                                     内外表数据量差不多时，in和exists性能相当；
+                                     内外表数据量相差大时，遵循小表驱动大表的原则，外表数据量较小时，用exists；内表数据量较小时，用in；
 
 分区索引和全局索引的区别，分别在什么情况使用 
 
