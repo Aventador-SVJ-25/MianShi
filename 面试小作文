@@ -3,15 +3,6 @@
 对数据进行清洗、转换，编写日常工作所需的shell脚本，项目文档的编写。
 在做好本职工作之上，还参与协助数仓模型的设计，报表的制作等，能够与业务员、架构师以及其他技术员进行有效的沟通和协作，保证项目工作能够高效展开实施。
 
-Hello, interviewer. My name is Chen Hengtao. I graduated from Guangzhou Maritime Institute. 
-After graduation, I worked as a Linux operation and maintenance engineer for about 2 years and worked as an ETL engineer for about 4 years.
-During my time as an ETL engineer, I worked on 3 data warehouse projects. 
-My responsibilities in the most recent data warehouse projects included project-related business research, 
-design of the overall ETL process, scheduling and monitoring,
-cleaning and conversion of data, create shell scripts to handle daily work, and write some documents which project needs.
-In addition to doing my job well, I also assisted in the design of data warehouse models and the production of reports. 
-I was able to communicate and collaborate with sales staff, architects and other technicians to ensure that project work can be implemented efficiently.
-
 最近一份工作是外包到泉州银行的零售贷款数仓项目。
 我在该项目主要负责的内容有
 1.客户在jira中把需求发送到我们的团队，然后我们会跟相关的业务员开需求澄清会议来确认取数逻辑，指标的粒度和口径
@@ -23,28 +14,6 @@ I was able to communicate and collaborate with sales staff, architects and other
 最后再根据需求用宽表层的基础数据作进一步的聚合，进而形成最终的指标并输出到各个集市表里，比如授信监控集市，贷款逾期集市，贷款申请集市等等；
 4.完成sql代码后我会进行个自测，来对数据的唯一性，完整性，合法性，精确性，时效性, 依赖性作检查，一定程度上保证数据的质量，没问题后就把sql代码封装到shell脚本里，
 并交给测试人员去做冒烟测试跟联调测试，测试通过后再去写上线文档并交给DBA去安排上线；
-
-My most recent project was a retail loan data warehouse project outsourced to Bank of Quanzhou.
-My main responsibilities in this project was
-when the customer sends the requirements to our team in jira, 
-we hold a requirements clarification meeting with the relevant sales staff to confirm the data acquisition logic, 
-the granularity and caliber of the indicators
-We will also discuss how to implement the requirements, conduct feasibility analysis, which business system tables and fields to use, 
-whether the existing tables in the data warehouse can be reused etc.
-Our data warehouse is designed based on the star model, 
-and each data developer loads data into DW layer and DM layer according to the secondary subject domain which assigned to him
-In this project, I am mainly responsible for the theme of risk control domain. 
-From the DWD layer, I should determine cleaning rules according to the caliber in the Indicator System Management Manual,
-and Remove duplicates, null values, and outliers from ODS layer data, and also unify data types and data formats, etc.
-Then load the cleaned data into each fact table on DWD layer,
-then aggregate the fact tables and dimension tables which related to the risk control domain theme into a wide table 
-to provide unified basic data and indicators for the DM layer,
-finally, further aggregate the basic data from the dws layer according to the needs, and then output the final indicators to each DM table, 
-After completing the hive sql code, 
-I will conduct a self-test to check the uniqueness, integrity, legality, accuracy, and timeliness of the data to ensure the quality of the data to a certain extent. 
-If there is no problem, encapsulate the hive sql code into shell scripts,
-and hand it over to the test engineer to do SIT test and UAT test. 
-After the test passes, I will draft the online document and hand it over to the DBA to arrange those new tables online;
 
 对这些贴源层新增数据作清洗转换，具体要清洗内容有：
 去异常：比如贷款申请表里有异常申请的，应该去掉，
@@ -101,11 +70,11 @@ FROM tmp.tmp_shops;
 
 人员：共7人，1 项目经理，1 需求分析师，4 ETL工程师，1 测试工程师
 
-每日总数据量：400万行
-总数据量：210多亿行
-单表单日新增数据量：50w行
-最大单表数据量：27亿行
-客户量：360w
+每日总数据量：600万行
+总数据量：10亿多行
+单表单日新增数据量：80w行
+最大单表数据量：1.5亿行
+客户量：380w
 
 银行系统：
 BBS：票据系统	
@@ -349,44 +318,24 @@ Vintage 就是帐龄，Flow Rate 滚动率，CPI 账户逾期率，API 金额逾
 可以区分 M1、M2、M3+监控每日催回笔数和催回金额的情况
 可以监测催收人员拨打电话数、催收电话时长、回款数等，及时对催收策略进行调整和优化，以便提高催收效率。
 
-巴塞尔协议：银行风险管理手册。
 
-巴塞尔协议一二三的区别
-巴塞尔协议I、II、III之间的主要区别体现在监管目标、‌风险覆盖范围、‌资本充足率要求以及监管框架的构成上。这些区别反映了银行监管标准的逐步发展和完善，以应对日益复杂的金融风险。
-
-巴塞尔协议I
-时间：1988年7月颁布。
-主要内容就是银行的放贷规模必须以自有的资本金想匹配想挂钩，银行风险管理手册。
-核心内容：确立了以风险为基础的资本充足率标准，包括资本定义、风险加权资产（RWA）的计量方法，以及最低资本充足率要求（核心资本充足率4%，总资本充足率8%）。
-风险覆盖：主要关注信用风险，对市场风险和操作风险的覆盖较少。
-
-巴塞尔协议II
-时间：2004年6月正式实施。
-核心内容：构建了以“最低资本要求、监管部门的监督检查和市场约束”为三大支柱的监管框架，扩大了风险计量范围，包括信用风险、市场风险和操作风险。
-风险覆盖：引入了内部评级法，允许银行基于内部模型计量各类风险，并强调基于全面风险评估进行资本管理。
-资本充足率=（资本-扣除项）/风险加权资产，要求资本充足率8%，核心资本充足率4%
-
-巴塞尔协议III
-时间：2010年12月发布，2013年1月1日起实施。
-核心内容：在巴塞尔协议II的基础上，进一步提高了资本充足率要求，引入了反周期超额资本，并严格了资本扣除限制，以应对金融危机后的银行监管需求。
-风险覆盖：继续强化对信用风险、市场风险和操作风险的监管，并提出了更严格的资本和流动性要求。
-
-巴III规定核心一级资本充足率为4.5%，一级资本充足率为6%，总资本充足率为8%
-
-总结
-巴塞尔协议的这三个版本代表了银行监管标准的逐步发展和完善。从最初的关注信用风险到后来的全面风险管理，再到应对金融危机后的进一步强化，巴塞尔协议体现了对银行监管的不断适应和改进。这些协议共同构成了全球银行业监管的基础，确保了银行的稳健运营和金融系统的稳定
-
-
-
-
-
+################################################################################################################################
+mapreduce工作原理：首先程序会获取计算所需要的数据，然后将原始数据分割成多个小块，
+                  然后这些数据块被分配到集群中的不同节点里去执行mapper任务，
+                  通过mapper函数对数据进行键值对映射，将原始数据转换为中间结果  #（mapper可以处理任何用户自定义的逻辑，例如文本分割，计数，过滤等）
+                  这些中间结果通过哈希算法打上标记，并写入到mapper的内存缓冲区中，
+                  如果写入的数据超过内存缓冲区阈值，数据就会溢写到磁盘上，在溢写的过程中会对key进行排序和归并，
+                  如果中间结果比较大，就会形成多个溢写文件，这些溢写文件里中间结果会根据之前打上的标记汇总成分区文件
+                  然后这些分区文件被发送到reducer任务中，reducer会接收这些文件里键值对的集合，并对每个键对应的值进行聚合操作  #（如求和，最大值，最小值等）
+                  最后生成最终结果
 
 表内利息：指正常的贷款利息收入    表外利息: 指逾期贷款的利息收入     税务处理有差异
 
 怎么建模：事实表从ER模型根据业务事件（采用的就是业务库的ER模型），（有一个实体 比如一次新的交易，下面有他的属性，就是椭圆形关注的），
           用powerdesigner生成逻辑模型，然后落实到物理模型，生成数据字典
 
-下游部门？上游部门？：下游部门是有做报表分析部，和做模型的部门，还有报送系统；上游是个贷业务的技术开发团队
+下游：报表分析，做风控模型部门，报送系统，智能营销等等；
+上游：个贷业务技术开发团队，其它系统的数仓
 
 统一授信和分销授信：
 
@@ -473,8 +422,6 @@ hive八位日期字符串转化为DATE类型：SELECT from_unixtime(unix_timesta
                       3.稳定与不稳定分离：如果宽表依赖外部大表补维度从而导致计算经常延迟，可考虑关联后退，即在报表层做关联，从而弱化宽表与不稳定依赖表的耦合
 
 怎么对接：jira把任务发给我们团队，然后项目经理分配任务，然后自己找相应的业务沟通，根据任务要求做需求分析说明书，然后开发
-
-业务需求：
 
 连续登录问题：select id, count(1) as login_duration from 
              (select id, date, rn, date_sub(date, rn) as sub_date from 
@@ -644,3 +591,65 @@ extra（重要）：额外的信息说明；
               2.Using temporary：要解决查询，MySQL需要创建一个临时表来保存结果。 如果查询包含不同列的GROUP BY和ORDER BY子句，则通常会发生这种情况。官方解释：”为了解决查询，MySQL需要创建一个临时表来容纳结果。
                                  典型情况如查询包含可以按不同情况列出列的GROUP BY和ORDER BY子句时。很明显就是通过where条件一次性检索出来的结果集太大了，内存放不下了，只能通过临时表来辅助处理；
                                  当mysql需要创建临时表时，选择内存临时表还是硬盘临时表取决于参数tmp_table_size和max_heap_table_size，内存临时表的最大容量为tmp_table_size和max_heap_table_size值的最小值，当所需临时表的容量大于两者的最小值时，mysql就会使用硬盘临时表存放数据。
+
+
+
+Hello, interviewer. My name is Chen Hengtao. I graduated from Guangzhou Maritime Institute. 
+After graduation, I worked as a Linux operation and maintenance engineer for about 2 years and worked as an ETL engineer for about 4 years.
+During my time as an ETL engineer, I worked on 3 data warehouse projects. 
+My responsibilities in the most recent data warehouse projects included project-related business research, 
+design of the overall ETL process, scheduling and monitoring,
+cleaning and conversion of data, create shell scripts to handle daily work, and write some documents which project needs.
+In addition to doing my job well, I also assisted in the design of data warehouse models and the production of reports. 
+I was able to communicate and collaborate with sales staff, architects and other technicians to ensure that project work can be implemented efficiently.
+
+
+My most recent project was a retail loan data warehouse project outsourced to Bank of Quanzhou.
+My main responsibilities in this project was
+when the customer sends the requirements to our team in jira, 
+we hold a requirements clarification meeting with the relevant sales staff to confirm the data acquisition logic, 
+the granularity and caliber of the indicators
+We will also discuss how to implement the requirements, conduct feasibility analysis, which business system tables and fields to use, 
+whether the existing tables in the data warehouse can be reused etc.
+Our data warehouse is designed based on the star model, 
+and each data developer loads data into DW layer and DM layer according to the secondary subject domain which assigned to him
+In this project, I am mainly responsible for the theme of risk control domain. 
+From the DWD layer, I should determine cleaning rules according to the caliber in the Indicator System Management Manual,
+and Remove duplicates, null values, and outliers from ODS layer data, and also unify data types and data formats, etc.
+Then load the cleaned data into each fact table on DWD layer,
+then aggregate the fact tables and dimension tables which related to the risk control domain theme into a wide table 
+to provide unified basic data and indicators for the DM layer,
+finally, further aggregate the basic data from the dws layer according to the needs, and then output the final indicators to each DM table, 
+After completing the hive sql code, 
+I will conduct a self-test to check the uniqueness, integrity, legality, accuracy, and timeliness of the data to ensure the quality of the data to a certain extent. 
+If there is no problem, encapsulate the hive sql code into shell scripts,
+and hand it over to the test engineer to do SIT test and UAT test. 
+After the test passes, I will draft the online document and hand it over to the DBA to arrange those new tables online;
+
+
+巴塞尔协议：银行风险管理手册。
+
+巴塞尔协议一二三的区别
+巴塞尔协议I、II、III之间的主要区别体现在监管目标、‌风险覆盖范围、‌资本充足率要求以及监管框架的构成上。这些区别反映了银行监管标准的逐步发展和完善，以应对日益复杂的金融风险。
+
+巴塞尔协议I
+时间：1988年7月颁布。
+主要内容就是银行的放贷规模必须以自有的资本金想匹配想挂钩，银行风险管理手册。
+核心内容：确立了以风险为基础的资本充足率标准，包括资本定义、风险加权资产（RWA）的计量方法，以及最低资本充足率要求（核心资本充足率4%，总资本充足率8%）。
+风险覆盖：主要关注信用风险，对市场风险和操作风险的覆盖较少。
+
+巴塞尔协议II
+时间：2004年6月正式实施。
+核心内容：构建了以“最低资本要求、监管部门的监督检查和市场约束”为三大支柱的监管框架，扩大了风险计量范围，包括信用风险、市场风险和操作风险。
+风险覆盖：引入了内部评级法，允许银行基于内部模型计量各类风险，并强调基于全面风险评估进行资本管理。
+资本充足率=（资本-扣除项）/风险加权资产，要求资本充足率8%，核心资本充足率4%
+
+巴塞尔协议III
+时间：2010年12月发布，2013年1月1日起实施。
+核心内容：在巴塞尔协议II的基础上，进一步提高了资本充足率要求，引入了反周期超额资本，并严格了资本扣除限制，以应对金融危机后的银行监管需求。
+风险覆盖：继续强化对信用风险、市场风险和操作风险的监管，并提出了更严格的资本和流动性要求。
+
+巴III规定核心一级资本充足率为4.5%，一级资本充足率为6%，总资本充足率为8%
+
+总结
+巴塞尔协议的这三个版本代表了银行监管标准的逐步发展和完善。从最初的关注信用风险到后来的全面风险管理，再到应对金融危机后的进一步强化，巴塞尔协议体现了对银行监管的不断适应和改进。这些协议共同构成了全球银行业监管的基础，确保了银行的稳健运营和金融系统的稳定
